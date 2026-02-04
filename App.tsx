@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DEFAULT_RESUME_TEXT } from './constants';
 import { parseResumeToSlides } from './services/geminiService';
 import { generatePptx } from './services/pptxService';
-import { generateCsv } from './services/csvService';
+import { generateExcel } from './services/excelService';
 import { PresentationData } from './types';
 import SlidePreview from './components/SlidePreview';
 import { 
@@ -43,9 +43,9 @@ const App: React.FC = () => {
     }
   };
 
-  const handleDownloadCsv = () => {
+  const handleDownloadExcel = () => {
     if (presentationData) {
-      generateCsv(presentationData);
+      generateExcel(presentationData);
     }
   };
 
@@ -85,17 +85,17 @@ const App: React.FC = () => {
             </button>
             
             <button
-              onClick={handleDownloadCsv}
+              onClick={handleDownloadExcel}
               disabled={!presentationData || loading}
               className={`flex items-center px-3 py-2 rounded-md font-medium text-sm shadow-sm transition-all ${
                 !presentationData || loading
                   ? 'bg-slate-300 text-white cursor-not-allowed'
                   : 'bg-green-600 text-white hover:bg-green-700 hover:shadow-md'
               }`}
-              title="Download content as CSV for Google Sheets"
+              title="Download content as XLSX for Google Sheets"
             >
               <FileSpreadsheet className="w-4 h-4 mr-2" />
-              Sheets CSV
+              Google Sheet (.xlsx)
             </button>
 
             <button
