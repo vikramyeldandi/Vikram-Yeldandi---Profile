@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DEFAULT_RESUME_TEXT } from './constants';
 import { parseResumeToSlides } from './services/geminiService';
 import { generatePptx } from './services/pptxService';
+import { generateCsv } from './services/csvService';
 import { PresentationData } from './types';
 import SlidePreview from './components/SlidePreview';
 import { 
@@ -11,7 +12,8 @@ import {
   ChevronRight, 
   Presentation,
   Loader2,
-  Edit3
+  Edit3,
+  FileSpreadsheet
 } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -35,9 +37,15 @@ const App: React.FC = () => {
     }
   };
 
-  const handleDownload = () => {
+  const handleDownloadPptx = () => {
     if (presentationData) {
       generatePptx(presentationData);
+    }
+  };
+
+  const handleDownloadCsv = () => {
+    if (presentationData) {
+      generateCsv(presentationData);
     }
   };
 
@@ -62,11 +70,11 @@ const App: React.FC = () => {
             <h1 className="text-xl font-bold text-slate-800">Resume to Deck</h1>
           </div>
           
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
             <button
               onClick={handleGenerate}
               disabled={loading}
-              className={`flex items-center px-4 py-2 rounded-md font-medium text-sm transition-colors ${
+              className={`flex items-center px-3 py-2 rounded-md font-medium text-sm transition-colors ${
                 loading 
                   ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
                   : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-300'
@@ -77,9 +85,23 @@ const App: React.FC = () => {
             </button>
             
             <button
-              onClick={handleDownload}
+              onClick={handleDownloadCsv}
               disabled={!presentationData || loading}
-              className={`flex items-center px-4 py-2 rounded-md font-medium text-sm shadow-sm transition-all ${
+              className={`flex items-center px-3 py-2 rounded-md font-medium text-sm shadow-sm transition-all ${
+                !presentationData || loading
+                  ? 'bg-slate-300 text-white cursor-not-allowed'
+                  : 'bg-green-600 text-white hover:bg-green-700 hover:shadow-md'
+              }`}
+              title="Download content as CSV for Google Sheets"
+            >
+              <FileSpreadsheet className="w-4 h-4 mr-2" />
+              Sheets CSV
+            </button>
+
+            <button
+              onClick={handleDownloadPptx}
+              disabled={!presentationData || loading}
+              className={`flex items-center px-3 py-2 rounded-md font-medium text-sm shadow-sm transition-all ${
                 !presentationData || loading
                   ? 'bg-slate-300 text-white cursor-not-allowed'
                   : 'bg-orange-500 text-white hover:bg-orange-600 hover:shadow-md'
@@ -87,7 +109,7 @@ const App: React.FC = () => {
               title="Download compatible .pptx file for Google Slides"
             >
               <Download className="w-4 h-4 mr-2" />
-              Download for Google Slides
+              Slide Deck
             </button>
           </div>
         </div>
